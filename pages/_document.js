@@ -10,7 +10,10 @@ export default class MyDocument extends Document {
       <html>
         <Head>
           <meta name="author" content={"Euijin"} />
-          <link href="/static/styles.css" rel={"stylesheet"} />
+          <link
+            href="//cdnjs.cloudflare.com/ajax/libs/antd/3.8.1/antd.min.css"
+            rel="stylesheet"
+          />
         </Head>
         <body>
           <Main />
