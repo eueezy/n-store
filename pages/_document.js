@@ -11,7 +11,7 @@ export default class MyDocument extends Document {
         <Head>
           <meta name="author" content={"Euijin"} />
           <link
-            href="//cdnjs.cloudflare.com/ajax/libs/antd/3.8.1/antd.min.css"
+            href="//cdnjs.cloudflare.com/ajax/libs/antd/3.11.6/antd.min.css"
             rel="stylesheet"
           />
           <style>{`body { background-color: #EFF2F5!important}`}</style>
