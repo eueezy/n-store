@@ -6,5 +6,14 @@ export const INDEX_QUERY = gql`
       id
       name
     }
+    products(where: { onSale: true }) {
+      id
+      name
+      detail
+      price
+      photo {
+        url
+      }
+    }
   }
 `;
