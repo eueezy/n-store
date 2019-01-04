@@ -13,7 +13,6 @@ export const resolvers = {
         ${PRODUCT_FRAGMENT}
       `;
       const product = cache.readFragment({ fragment, id });
-      console.log(product);
 
       const cartQuery = gql`
         {
@@ -24,11 +23,15 @@ export const resolvers = {
       `;
       const { cart } = cache.readQuery({ query: cartQuery });
       let newCart;
+      let onCart;
       const foundProduct = cart.find(aProduct => aProduct.id === product.id);
       if (foundProduct) {
+        const cleanCart = cart.filter(aProduct => aProduct.id !== product.id);
         newCart = cleanCart;
+        onCart = false;
       } else {
         newCart = [...cart, product];
+        onCart = true;
       }
 
       cache.writeData({
@@ -36,7 +39,19 @@ export const resolvers = {
           cart: newCart
         }
       });
+      cache.writeFragment({
+        id: `Product:${product.id}`,
+        fragment: PRODUCT_FRAGMENT,
+        data: {
+          __typename: "Product",
+          ...product,
+          onCart
+        }
+      });
       return null;
     }
+  },
+  Product: {
+    onCart: () => false
   }
 };
