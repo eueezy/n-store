@@ -23,9 +23,17 @@ export const resolvers = {
         }
       `;
       const { cart } = cache.readQuery({ query: cartQuery });
+      let newCart;
+      const foundProduct = cart.find(aProduct => aProduct.id === product.id);
+      if (foundProduct) {
+        newCart = cleanCart;
+      } else {
+        newCart = [...cart, product];
+      }
+
       cache.writeData({
         data: {
-          cart: [...cart, product]
+          cart: newCart
         }
       });
       return null;
