@@ -1,12 +1,36 @@
-setInterval(() => console.log("Hi"), 5000);
+// install -> serviceworker가 등록됐을 때 발생
+self.addEventListener("install", event => {
+  const offlinePage = new Request("/");
+  event.waitUntil(
+    fetch(offlinePage).then(response => {
+      return caches.open("n-store").then(cache => {
+        // 유저 컴퓨터 안의 폴더를 open
+        return cache.put(offlinePage, response);
+      });
+    })
+  );
+});
 
-/*
+// fetch 이벤트가 발생하면 해당 request를 진행함
+self.addEventListener("fetch", event => {
+  event.respondWith(
+    fetch(event.request).catch(error => {
+      return caches.open("nomad-store").then(cache => cache.match("/"));
+    })
+  );
+});
 
-service worker은 항상 업데이트 되지는 않음 -> sync 필요
-파일 업데이트 되지 않음 -> 한번 register는 되지만 업데이트는 안됨
--> 두 개의 service worker가 있기 때문
-하나는 activate 되기를 기다리고 있음
-service worker은 유저와 항상 같이 있는 js 파일임
+/* 
+모든 fetch 요청들에 대해서 이벤트로 catch
 
+self.addEventListener("fetch", event => {
+    console.log(event)
+})
+-> 어디에서든 fetch 이벤트들을 catch
+
+
+유저가 service worker를 가지고 있으면 (이는 자동으로 그렇게 됨) 
+해당 페이지의 version을 크롬 cache에 저장
+-> cache에 저장해놨던 버전의 페이지를 보여줌
 
 */
