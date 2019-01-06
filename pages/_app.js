@@ -18,6 +18,16 @@ class MyApp extends App {
     return { pageProps };
   }
 
+  // 모든 페이지에 service worker 설치 (_app은 모든 페이지를 건드리기 때문)
+  componentDidMount() {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/sw.js")
+        .then(result => console.log("SW Registered: ", result))
+        .catch(error => console.log("Can't register SW: ", error));
+    }
+  }
+
   render() {
     const { Component, pageProps, apollo } = this.props;
     return (
