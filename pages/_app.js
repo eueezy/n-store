@@ -5,6 +5,7 @@ import { ApolloProvider } from "react-apollo";
 import withApollo from "../lib/withApollo";
 import withNProgress from "next-nprogress";
 import NProgressStyles from "next-nprogress/styles";
+import convertDataURIToBinary from "../lib/base64";
 const { Footer } = Layout;
 
 class MyApp extends App {
@@ -20,10 +21,26 @@ class MyApp extends App {
 
   // 모든 페이지에 service worker 설치 (_app은 모든 페이지를 건드리기 때문)
   componentDidMount() {
-    if ("serviceWorker" in navigator) {
+    if ("serviceWorker" in navigator && "PushManager" in window) {
       navigator.serviceWorker
         .register("/sw.js")
-        .then(result => console.log("SW Registered: ", result))
+        .then(swReg => {
+          console.log("SW Registered: ", swReg);
+          Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+              swReg.pushManager
+                .subscribe({
+                  userVisibleOnly: true,
+                  applicationServerKey: convertDataURIToBinary(
+                    "BMQl6dWfLFq-QWi4XR1SAWSzBSMRSenCGO7ktFoazGf7umgwPcvnp_r7xmJyBKa_0av4reD1EJCVCyPu4qu2X80"
+                  )
+                })
+                .then(pushSubscriptionObject => {
+                  console.log(pushSubscriptionObject);
+                });
+            }
+          });
+        })
         .catch(error => console.log("Can't register SW: ", error));
     }
   }
