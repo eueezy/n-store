@@ -23,7 +23,8 @@ self.addEventListener("fetch", event => {
 self.addEventListener("push", event => {
   const title = "N-Store";
   const options = {
-    body: event.data.text()
+    body: event.data.text(),
+    icon: "./static/192x192.png"
   };
   event.waitUntil(self.registration.showNotification(title, options));
 });
