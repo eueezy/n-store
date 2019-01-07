@@ -20,6 +20,14 @@ self.addEventListener("fetch", event => {
   );
 });
 
+self.addEventListener("push", event => {
+  const title = "N-Store";
+  const options = {
+    body: event.data.text()
+  };
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
 /* 
 모든 fetch 요청들에 대해서 이벤트로 catch
 
